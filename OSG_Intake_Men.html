@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSG — Men's Comprehensive Biomarker & Health Intake</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --navy: #1B2A4A;
+    --gold: #C4973B;
+    --deep-red: #2C4A6E;
+    --dark: #2a2a2a;
+    --med: #666;
+    --light-bg: #F8F6F2;
+    --card-bg: #FFFFFF;
+    --border: #E2DED6;
+    --input-bg: #FAFAF8;
+    --success: #2D7D46;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light-bg);
+    color: var(--dark);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--navy);
+    padding: 40px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--deep-red));
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    color: #fff;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .header p {
+    color: var(--gold);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .header .conf {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.75rem;
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  .progress-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--navy);
+    padding: 12px 24px;
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .progress-dot {
+    width: 28px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .progress-dot.active { background: var(--gold); }
+  .progress-dot.complete { background: var(--success); }
+
+  .section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 32px 28px;
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .section-num {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    color: var(--med);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .subsection-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .field-group {
+    margin-bottom: 16px;
+  }
+  .field-group label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 5px;
+  }
+  .field-group .hint {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--med);
+    font-style: italic;
+    margin-bottom: 5px;
+  }
+  .field-group input[type="text"],
+  .field-group input[type="number"],
+  .field-group input[type="email"],
+  .field-group input[type="date"],
+  .field-group input[type="tel"],
+  .field-group select,
+  .field-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    background: var(--input-bg);
+    color: var(--dark);
+    transition: border-color 0.2s;
+  }
+  .field-group input:focus,
+  .field-group select:focus,
+  .field-group textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(196,151,59,0.1);
+  }
+  .field-group textarea { min-height: 80px; resize: vertical; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .field-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 500px) {
+    .field-row, .field-row-3 { grid-template-columns: 1fr; }
+  }
+
+  .check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin: 8px 0 16px;
+  }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--dark);
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: var(--light-bg); }
+  .check-item input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--navy);
+    flex-shrink: 0;
+  }
+
+  .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 16px;
+  }
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .radio-item:hover { border-color: var(--gold); }
+  .radio-item input[type="radio"] { accent-color: var(--navy); }
+
+  .severity-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px;
+    font-size: 0.82rem;
+  }
+  .severity-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+  .severity-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .severity-table tr:nth-child(even) td { background: var(--input-bg); }
+  .severity-table select {
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    background: #fff;
+  }
+  .severity-table input {
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    width: 100%;
+    background: #fff;
+  }
+
+  .bio-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.8rem;
+  }
+  .bio-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+  .bio-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .bio-table tr:nth-child(even) td { background: var(--input-bg); }
+  .bio-table input {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.78rem;
+    background: #fff;
+  }
+
+  .note-box {
+    background: #FDF8F0;
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    color: var(--med);
+    margin: 12px 0;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+  }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    gap: 12px;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-back {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--border);
+  }
+  .btn-back:hover { background: var(--light-bg); }
+  .btn-next {
+    background: var(--navy);
+    color: #fff;
+    margin-left: auto;
+  }
+  .btn-next:hover { background: #243a63; }
+  .btn-submit {
+    background: var(--deep-red);
+    color: #fff;
+    width: 100%;
+    padding: 16px;
+    font-size: 1rem;
+  }
+  .btn-submit:hover { background: #a02960; }
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .consent-box {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--dark);
+  }
+
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 24px;
+  }
+  .success-screen .check-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--success);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .success-screen .check-circle svg { width: 32px; height: 32px; }
+  .success-screen h2 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--navy);
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+  }
+  .success-screen p { color: var(--med); max-width: 500px; margin: 0 auto; }
+
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(27,42,74,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .loading-overlay.active { display: flex; }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-overlay p { color: #fff; font-size: 0.9rem; }
+
+  .med-table-wrap {
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  .med-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    min-width: 500px;
+  }
+  .med-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .med-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .med-table input {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.78rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Optimum Standard Group</h1>
+  <p>Men's Comprehensive Biomarker & Health Intake</p>
+  <div class="conf">Confidential — Peptide, Longevity & Nutritional Science Advisory Panel</div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="container">
+<form id="intakeForm">
+
+<!-- ========== SECTION 1 ========== -->
+<div class="section active" data-section="0">
+<div class="section-card">
+  <span class="section-num">Section 1 of 8</span>
+  <h2 class="section-title">Personal Information</h2>
+  <p class="section-desc">Basic demographics and provider details. Race/ethnicity is clinically relevant — biomarker reference ranges and hormonal timelines vary significantly by background.</p>
+
+  <div class="field-row">
+    <div class="field-group"><label>Full Legal Name *</label><input type="text" name="full_name" required></div>
+    <div class="field-group"><label>Preferred Name</label><input type="text" name="preferred_name"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Date of Birth *</label><input type="date" name="dob" required></div>
+    <div class="field-group"><label>Age *</label><input type="number" name="age" required></div>
+  </div>
+  <div class="field-group"><label>Email *</label><input type="email" name="email" required></div>
+  <div class="field-group"><label>Phone</label><input type="tel" name="phone"></div>
+  <div class="field-group">
+    <label>Race / Ethnicity *</label>
+    <span class="hint">Biomarker reference ranges, disease risk, and hormonal timelines vary by race/ethnicity (SWAN study data).</span>
+    <input type="text" name="race_ethnicity" required>
+  </div>
+
+  <div class="subsection-title">Body Composition</div>
+  <div class="field-row">
+    <div class="field-group"><label>Height</label><input type="text" name="height"></div>
+    <div class="field-group"><label>Weight</label><input type="text" name="weight"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Waist Circumference (at navel)</label><input type="text" name="waist"></div>
+    <div class="field-group"><label>Hip Circumference</label><input type="text" name="hip"></div>
+  </div>
+  <div class="field-row-3">
+    <div class="field-group"><label>Waist-to-Hip Ratio</label><input type="text" name="whr"></div>
+    <div class="field-group"><label>BMI</label><input type="text" name="bmi"></div>
+    <div class="field-group"><label>Body Fat %</label><input type="text" name="body_fat"></div>
+  </div>
+
+  <div class="subsection-title">Healthcare Providers</div>
+  <div class="field-row">
+    <div class="field-group"><label>Primary Care Physician</label><input type="text" name="pcp_name"></div>
+    <div class="field-group"><label>PCP Phone</label><input type="tel" name="pcp_phone"></div>
+  </div>
+  <div class="field-group"><label>Current Prescribing Physician(s)</label><input type="text" name="prescribing_md"></div>
+  <div class="field-row">
+    <div class="field-group"><label>Preferred Pharmacy</label><input type="text" name="pharmacy"></div>
+    <div class="field-group"><label>Insurance Provider</label><input type="text" name="insurance"></div>
+  </div>
+  <div class="field-group"><label>Emergency Contact (Name & Phone)</label><input type="text" name="emergency_contact"></div>
+
+  <div class="nav-buttons"><button type="button" class="btn btn-next" onclick="nextSection()">Continue →</button></div>
+</div>
+</div>
+
+<!-- ========== SECTION 2 ========== -->
+<div class="section" data-section="1">
+<div class="section-card">
+  <span class="section-num">Section 2 of 8</span>
+  <h2 class="section-title">Hormonal & Sexual Health</h2>
+  <p class="section-desc">Testosterone, prostate, and reproductive health. This drives peptide and hormonal protocol design.</p>
+
+  <div class="subsection-title">Testosterone & Androgen Status</div>
+  <label style="font-size:0.82rem;font-weight:600;">Diagnosed with low testosterone?</label>
+  <div class="radio-group">
+    <label class="radio-item"><input type="radio" name="low_t_dx" value="Yes"> Yes</label>
+    <label class="radio-item"><input type="radio" name="low_t_dx" value="No"> No</label>
+    <label class="radio-item"><input type="radio" name="low_t_dx" value="Suspected"> Suspected but not tested</label>
+  </div>
+
+  <label style="font-size:0.82rem;font-weight:600;">Currently on TRT?</label>
+  <div class="radio-group">
+    <label class="radio-item"><input type="radio" name="trt_status" value="Injections"> Yes — injections</label>
+    <label class="radio-item"><input type="radio" name="trt_status" value="Topical"> Yes — topical/gel</label>
+    <label class="radio-item"><input type="radio" name="trt_status" value="Pellets"> Yes — pellets</label>
+    <label class="radio-item"><input type="radio" name="trt_status" value="Clomiphene"> Yes — clomiphene</label>
+    <label class="radio-item"><input type="radio" name="trt_status" value="No"> No</label>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>If on TRT, dose & frequency</label><input type="text" name="trt_dose"></div>
+    <div class="field-group"><label>Duration on TRT</label><input type="text" name="trt_duration"></div>
+  </div>
+  <div class="field-group"><label>TRT prescribing physician</label><input type="text" name="trt_physician"></div>
+
+  <label style="font-size:0.82rem;font-weight:600;">Symptoms (check all)</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Low libido"> Low libido</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="ED"> Erectile dysfunction</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Fatigue"> Fatigue / low energy</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Brain fog"> Brain fog</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="No morning erections"> Loss of morning erections</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Muscle loss"> Muscle loss</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Weight gain"> Weight gain (midsection)</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Hair loss"> Hair loss (scalp)</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Gynecomastia"> Gynecomastia</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Joint pain"> Joint pain / stiffness</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Night sweats"> Night sweats</label>
+    <label class="check-item"><input type="checkbox" name="male_symptoms" value="Motivation"> Decreased motivation</label>
+  </div>
+
+  <div class="subsection-title">Prostate Health</div>
+  <div class="field-row">
+    <div class="field-group"><label>Most recent PSA value</label><input type="text" name="psa_value"></div>
+    <div class="field-group"><label>PSA date</label><input type="date" name="psa_date"></div>
+  </div>
+  <label style="font-size:0.82rem;font-weight:600;">Prostate history</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="prostate" value="Normal"> Normal — no issues</label>
+    <label class="check-item"><input type="checkbox" name="prostate" value="BPH"> BPH (enlarged)</label>
+    <label class="check-item"><input type="checkbox" name="prostate" value="Prostatitis"> Prostatitis</label>
+    <label class="check-item"><input type="checkbox" name="prostate" value="Cancer history"> Prostate cancer history</label>
+    <label class="check-item"><input type="checkbox" name="prostate" value="Frequent urination"> Frequent urination</label>
+    <label class="check-item"><input type="checkbox" name="prostate" value="Family history"> Family history prostate cancer</label>
+  </div>
+
+  <div class="subsection-title">Fertility & Reproductive</div>
+  <label style="font-size:0.82rem;font-weight:600;">Currently trying to conceive?</label>
+  <div class="radio-group">
+    <label class="radio-item"><input type="radio" name="ttc" value="Yes"> Yes</label>
+    <label class="radio-item"><input type="radio" name="ttc" value="No"> No</label>
+    <label class="radio-item"><input type="radio" name="ttc" value="Future"> Future plans</label>
+  </div>
+  <div class="note-box">TRT and certain peptides (GnRH agonists) suppress spermatogenesis. This is critical for prescribing decisions.</div>
+  <label style="font-size:0.82rem;font-weight:600;">Fertility concerns</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="fertility" value="Low count"> Low sperm count</label>
+    <label class="check-item"><input type="checkbox" name="fertility" value="Low motility"> Low motility</label>
+    <label class="check-item"><input type="checkbox" name="fertility" value="Varicocele"> Varicocele</label>
+    <label class="check-item"><input type="checkbox" name="fertility" value="None"> None</label>
+    <label class="check-item"><input type="checkbox" name="fertility" value="Never tested"> Never tested</label>
+  </div>
+
+  <div class="nav-buttons">
+    <button type="button" class="btn btn-back" onclick="prevSection()">← Back</button>
+    <button type="button" class="btn btn-next" onclick="nextSection()">Continue →</button>
+  </div>
+</div>
+</div>
+
+<!-- ========== SECTION 3 ========== -->
+<div class="section" data-section="2">
+<div class="section-card">
+  <span class="section-num">Section 3 of 8</span>
+  <h2 class="section-title">Medical History</h2>
+  <p class="section-desc">Current diagnoses, surgical history, and family medical history.</p>
+
+  <div class="subsection-title">Current Diagnoses</div>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Type 2 diabetes"> Type 2 diabetes</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Pre-diabetes"> Pre-diabetes / insulin resistance</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Sleep apnea"> Sleep apnea</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Hypothyroidism"> Hypothyroidism</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Hashimotos"> Hashimoto's</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Hypertension"> Hypertension</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="High cholesterol"> High cholesterol</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Heart disease"> Heart disease</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Osteoporosis"> Osteoporosis</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Osteopenia"> Osteopenia</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Fibromyalgia"> Fibromyalgia</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="IBS"> IBS</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="SIBO"> SIBO</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="GERD"> GERD / acid reflux</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Depression"> Depression</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Anxiety"> Anxiety</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Gout"> Gout</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Fatty liver"> Fatty liver (NAFLD)</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="Lupus"> Lupus (SLE)</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="TBI"> TBI history</label>
+    <label class="check-item"><input type="checkbox" name="diagnoses" value="None"> None of the above</label>
+  </div>
+  <div class="field-group"><label>Other diagnoses</label><textarea name="other_diagnoses"></textarea></div>
+
+  <div class="subsection-title">Surgical History</div>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Vasectomy"> Vasectomy</label>
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Hernia repair"> Hernia repair</label>
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Joint surgery"> Knee / shoulder / joint surgery</label>
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Spinal surgery"> Spinal surgery</label>
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Cardiac procedure"> Cardiac procedure</label>
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Bariatric surgery"> Bariatric surgery</label>
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Appendectomy"> Appendectomy</label>
+    <label class="check-item"><input type="checkbox" name="surgeries" value="Tonsillectomy"> Tonsillectomy</label>
+  </div>
+  <div class="field-group"><label>Other surgeries with dates</label><textarea name="other_surgeries"></textarea></div>
+
+  <div class="subsection-title">Family History</div>
+  <div class="note-box">Indicate family member and age of onset if known.</div>
+  <div class="field-row">
+    <div class="field-group"><label>Heart disease / stroke</label><input type="text" name="fam_heart"></div>
+    <div class="field-group"><label>Breast cancer</label><input type="text" name="fam_breast_cancer"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Prostate cancer</label><input type="text" name="fam_prostate_cancer"></div>
+    <div class="field-group"><label>Diabetes</label><input type="text" name="fam_diabetes"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Thyroid disorders</label><input type="text" name="fam_thyroid"></div>
+    <div class="field-group"><label>Autoimmune diseases</label><input type="text" name="fam_autoimmune"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Osteoporosis</label><input type="text" name="fam_osteo"></div>
+    <div class="field-group"><label>Alzheimer's / dementia</label><input type="text" name="fam_dementia"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Lung cancer</label><input type="text" name="fam_lung_cancer"></div>
+    <div class="field-group"><label>Sickle cell disease / trait</label><input type="text" name="fam_sickle_cell"></div>
+  </div>
+
+  <div class="nav-buttons">
+    <button type="button" class="btn btn-back" onclick="prevSection()">← Back</button>
+    <button type="button" class="btn btn-next" onclick="nextSection()">Continue →</button>
+  </div>
+</div>
+</div>
+
+<!-- ========== SECTION 4 ========== -->
+<div class="section" data-section="3">
+<div class="section-card">
+  <span class="section-num">Section 4 of 8</span>
+  <h2 class="section-title">Medications, Supplements & Peptides</h2>
+  <p class="section-desc">Everything you're currently taking — prescription, supplement, and peptide.</p>
+
+  <div class="subsection-title">Prescription Medications</div>
+  <div class="med-table-wrap">
+  <table class="med-table">
+    <thead><tr><th>Medication</th><th>Dose</th><th>Frequency</th><th>Duration</th></tr></thead>
+    <tbody id="medRows"></tbody>
+  </table>
+  </div>
+  <button type="button" onclick="addMedRow()" style="font-size:0.78rem;color:var(--gold);background:none;border:none;cursor:pointer;margin:4px 0 16px;">+ Add medication</button>
+
+  <div class="subsection-title">Current Supplements</div>
+  <div class="med-table-wrap">
+  <table class="med-table">
+    <thead><tr><th>Supplement</th><th>Dose</th><th>Frequency</th><th>Reason</th></tr></thead>
+    <tbody id="suppRows"></tbody>
+  </table>
+  </div>
+  <button type="button" onclick="addSuppRow()" style="font-size:0.78rem;color:var(--gold);background:none;border:none;cursor:pointer;margin:4px 0 16px;">+ Add supplement</button>
+
+  <div class="subsection-title">Peptide History</div>
+  <label style="font-size:0.82rem;font-weight:600;">Have you used peptides?</label>
+  <div class="radio-group">
+    <label class="radio-item"><input type="radio" name="peptide_history" value="Currently using"> Currently using</label>
+    <label class="radio-item"><input type="radio" name="peptide_history" value="Previously used"> Previously used</label>
+    <label class="radio-item"><input type="radio" name="peptide_history" value="Never"> Never used</label>
+    <label class="radio-item"><input type="radio" name="peptide_history" value="Interested"> Interested</label>
+  </div>
+
+  <label style="font-size:0.82rem;font-weight:600;">Peptides used (check all)</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="BPC-157"> BPC-157</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="TB-500"> TB-500</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="GHK-Cu"> GHK-Cu</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Ipamorelin"> Ipamorelin</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="CJC-1295"> CJC-1295</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Semaglutide"> Semaglutide</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Tirzepatide"> Tirzepatide</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="PT-141"> PT-141</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Thymosin Alpha-1"> Thymosin Alpha-1</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Epithalon"> Epithalon</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="MOTS-c"> MOTS-c</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Selank"> Selank</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Semax"> Semax</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="KPV"> KPV</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Gonadorelin"> Gonadorelin</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="Enclomiphene"> Enclomiphene</label>
+    <label class="check-item"><input type="checkbox" name="peptides_used" value="MK-677"> MK-677</label>
+  </div>
+  <div class="field-group"><label>Source of peptides</label><input type="text" name="peptide_source"></div>
+  <div class="field-group"><label>Supervising physician</label><input type="text" name="peptide_physician"></div>
+  <div class="field-group"><label>Side effects experienced</label><textarea name="peptide_side_effects"></textarea></div>
+
+  <div class="nav-buttons">
+    <button type="button" class="btn btn-back" onclick="prevSection()">← Back</button>
+    <button type="button" class="btn btn-next" onclick="nextSection()">Continue →</button>
+  </div>
+</div>
+</div>
+
+<!-- ========== SECTION 5 ========== -->
+<div class="section" data-section="4">
+<div class="section-card">
+  <span class="section-num">Section 5 of 8</span>
+  <h2 class="section-title">Biomarker Panel</h2>
+  <p class="section-desc">Most recent lab results. Leave blank if not tested — the think tank may recommend it. Attach full reports if available.</p>
+
+  <div class="field-row-3">
+    <div class="field-group"><label>Lab Provider</label><input type="text" name="lab_provider"></div>
+    <div class="field-group"><label>Date of Draw</label><input type="date" name="lab_date"></div>
+    <div class="field-group"><label>Fasting?</label><select name="fasting"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+  </div>
+  <div class="field-group"><label>Time since last TRT injection (if applicable)</label><input type="text" name="time_since_trt"></div>
+
+  <div class="subsection-title">Metabolic Panel</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Marker</th><th>Value</th><th>Units</th></tr></thead><tbody id="metabolicPanel"></tbody></table></div>
+
+  <div class="subsection-title">Hormonal Panel — Male</div>
+  <div class="note-box">Draw AM fasted for testosterone. Note if on TRT — timing relative to last injection matters.</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Marker</th><th>Value</th><th>Units</th></tr></thead><tbody id="hormonalPanel"></tbody></table></div>
+
+  <div class="subsection-title">Thyroid Panel</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Marker</th><th>Value</th><th>Units</th></tr></thead><tbody id="thyroidPanel"></tbody></table></div>
+
+  <div class="subsection-title">Inflammatory & Nutrient Markers</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Marker</th><th>Value</th><th>Units</th></tr></thead><tbody id="inflammPanel"></tbody></table></div>
+
+  <div class="nav-buttons">
+    <button type="button" class="btn btn-back" onclick="prevSection()">← Back</button>
+    <button type="button" class="btn btn-next" onclick="nextSection()">Continue →</button>
+  </div>
+</div>
+</div>
+
+<!-- ========== SECTION 6 ========== -->
+<div class="section" data-section="5">
+<div class="section-card">
+  <span class="section-num">Section 6 of 8</span>
+  <h2 class="section-title">Biomarkers (continued)</h2>
+  <p class="section-desc">Growth hormone, longevity markers, CBC, bone health, and gut health.</p>
+
+  <div class="subsection-title">Growth Hormone & Longevity</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Marker</th><th>Value</th><th>Units</th></tr></thead><tbody id="longevityPanel"></tbody></table></div>
+
+  <div class="subsection-title">Complete Blood Count</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Marker</th><th>Value</th><th>Units</th></tr></thead><tbody id="cbcPanel"></tbody></table></div>
+
+  <div class="subsection-title">Bone & Cardiovascular Markers</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Marker</th><th>Value</th><th>Units</th></tr></thead><tbody id="bonePanel"></tbody></table></div>
+
+  <div class="subsection-title">Gut Health</div>
+  <div class="med-table-wrap"><table class="bio-table"><thead><tr><th>Test</th><th>Result</th><th>Provider/Date</th></tr></thead><tbody id="gutPanel"></tbody></table></div>
+
+  <div class="nav-buttons">
+    <button type="button" class="btn btn-back" onclick="prevSection()">← Back</button>
+    <button type="button" class="btn btn-next" onclick="nextSection()">Continue →</button>
+  </div>
+</div>
+</div>
+
+<!-- ========== SECTION 7 ========== -->
+<div class="section" data-section="6">
+<div class="section-card">
+  <span class="section-num">Section 7 of 8</span>
+  <h2 class="section-title">Lifestyle, Nutrition & Movement</h2>
+  <p class="section-desc">Diet, fasting, exercise, sleep, and stress profile.</p>
+
+  <div class="subsection-title">Nutrition</div>
+  <label style="font-size:0.82rem;font-weight:600;">Current dietary approach</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="diet" value="Mediterranean"> Mediterranean</label>
+    <label class="check-item"><input type="checkbox" name="diet" value="Keto"> Keto</label>
+    <label class="check-item"><input type="checkbox" name="diet" value="Carnivore"> Carnivore</label>
+    <label class="check-item"><input type="checkbox" name="diet" value="Paleo"> Paleo</label>
+    <label class="check-item"><input type="checkbox" name="diet" value="Vegan"> Vegan</label>
+    <label class="check-item"><input type="checkbox" name="diet" value="IF"> Intermittent fasting</label>
+    <label class="check-item"><input type="checkbox" name="diet" value="Cycle-synced"> Cycle-synced eating</label>
+    <label class="check-item"><input type="checkbox" name="diet" value="Standard"> Standard American Diet</label>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Daily protein (g)</label><input type="text" name="daily_protein"></div>
+    <div class="field-group"><label>Meals per day</label><input type="text" name="meals_per_day"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Eating window</label><input type="text" name="eating_window"></div>
+    <div class="field-group"><label>Daily water (oz)</label><input type="text" name="water_intake"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Caffeine consumption</label><input type="text" name="caffeine"></div>
+    <div class="field-group"><label>Alcohol consumption</label><input type="text" name="alcohol"></div>
+  </div>
+  <div class="field-group"><label>Food allergies / intolerances</label><input type="text" name="food_allergies"></div>
+
+  <div class="subsection-title">Fasting</div>
+  <label style="font-size:0.82rem;font-weight:600;">Do you practice fasting?</label>
+  <div class="radio-group">
+    <label class="radio-item"><input type="radio" name="fasting_practice" value="Regularly"> Regularly</label>
+    <label class="radio-item"><input type="radio" name="fasting_practice" value="Occasionally"> Occasionally</label>
+    <label class="radio-item"><input type="radio" name="fasting_practice" value="No"> No</label>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Fasting protocol</label><input type="text" name="fasting_protocol"></div>
+    <div class="field-group"><label>Longest fast (hours)</label><input type="text" name="longest_fast"></div>
+  </div>
+  
+
+  <div class="subsection-title">Exercise</div>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="exercise" value="Strength"> Strength / resistance</label>
+    <label class="check-item"><input type="checkbox" name="exercise" value="Walking"> Walking</label>
+    <label class="check-item"><input type="checkbox" name="exercise" value="Running"> Running</label>
+    <label class="check-item"><input type="checkbox" name="exercise" value="HIIT"> HIIT</label>
+    <label class="check-item"><input type="checkbox" name="exercise" value="Powerlifting"> Powerlifting</label>
+    <label class="check-item"><input type="checkbox" name="exercise" value="Swimming"> Swimming</label>
+    <label class="check-item"><input type="checkbox" name="exercise" value="None"> None currently</label>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><label>Frequency (days/week)</label><input type="text" name="exercise_freq"></div>
+    <div class="field-group"><label>Duration per session</label><input type="text" name="exercise_duration"></div>
+  </div>
+
+  <div class="subsection-title">Sleep</div>
+  <div class="field-row">
+    <div class="field-group"><label>Avg hours per night</label><input type="text" name="sleep_hours"></div>
+    <div class="field-group"><label>Sleep quality</label><select name="sleep_quality"><option value="">Select</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option></select></div>
+  </div>
+  <label style="font-size:0.82rem;font-weight:600;">Sleep issues</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="sleep_issues" value="Falling asleep"> Difficulty falling asleep</label>
+    <label class="check-item"><input type="checkbox" name="sleep_issues" value="Waking"> Waking during night</label>
+    <label class="check-item"><input type="checkbox" name="sleep_issues" value="Night sweats"> Night sweats</label>
+    <label class="check-item"><input type="checkbox" name="sleep_issues" value="Apnea"> Snoring / sleep apnea</label>
+    <label class="check-item"><input type="checkbox" name="sleep_issues" value="Not rested"> Not feeling rested</label>
+  </div>
+
+  <div class="subsection-title">Stress & Mental Health</div>
+  <div class="field-group"><label>Current stress level (1-10)</label><input type="number" name="stress_level" min="1" max="10"></div>
+  <label style="font-size:0.82rem;font-weight:600;">Primary stressors</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="stressors" value="Work"> Work / career</label>
+    <label class="check-item"><input type="checkbox" name="stressors" value="Financial"> Financial</label>
+    <label class="check-item"><input type="checkbox" name="stressors" value="Relationships"> Relationships</label>
+    <label class="check-item"><input type="checkbox" name="stressors" value="Caregiving"> Caregiving</label>
+    <label class="check-item"><input type="checkbox" name="stressors" value="Health"> Health concerns</label>
+    <label class="check-item"><input type="checkbox" name="stressors" value="Racial stress"> Racial stress / discrimination</label>
+  </div>
+  <div class="note-box">Racial stress and discrimination are documented contributors to allostatic load, chronic inflammation, and accelerated biological aging. This data is clinically relevant.</div>
+
+  <div class="nav-buttons">
+    <button type="button" class="btn btn-back" onclick="prevSection()">← Back</button>
+    <button type="button" class="btn btn-next" onclick="nextSection()">Continue →</button>
+  </div>
+</div>
+</div>
+
+<!-- ========== SECTION 8 ========== -->
+<div class="section" data-section="7">
+<div class="section-card">
+  <span class="section-num">Section 8 of 8</span>
+  <h2 class="section-title">Goals & Consent</h2>
+  <p class="section-desc">Your priorities, what optimal health looks like for you, and acknowledgment.</p>
+
+  <div class="subsection-title">Your Goals</div>
+  <div class="field-group"><label>Goal #1 *</label><input type="text" name="goal_1" required></div>
+  <div class="field-group"><label>Goal #2</label><input type="text" name="goal_2"></div>
+  <div class="field-group"><label>Goal #3</label><input type="text" name="goal_3"></div>
+
+  <label style="font-size:0.82rem;font-weight:600;">Areas of interest</label>
+  <div class="check-grid">
+    <label class="check-item"><input type="checkbox" name="interests" value="Hormonal optimization"> Hormonal optimization</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Body composition"> Body composition</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Muscle preservation"> Muscle preservation</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Bone health"> Bone health</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Gut health"> Gut health</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Sexual health"> Sexual health</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Cognitive"> Cognitive / brain health</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Longevity"> Longevity / bio age reversal</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Peptide therapy"> Peptide therapy</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Fasting"> Fasting optimization</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Testosterone"> Testosterone optimization</label>
+    <label class="check-item"><input type="checkbox" name="interests" value="Cardiovascular"> Cardiovascular health</label>
+  </div>
+
+  <div class="field-group"><label>What does optimal health look like for you?</label><textarea name="optimal_health"></textarea></div>
+  <div class="field-group"><label>What has NOT worked in the past?</label><textarea name="not_worked"></textarea></div>
+  <div class="field-group"><label>Anything about your cultural background or lived experience you want the team to understand?</label><textarea name="cultural_context"></textarea></div>
+
+  <div class="subsection-title">Acknowledgment & Consent</div>
+  <div class="consent-box">
+    <p>I understand that the Optimum Standard Group Advisory Think Tank provides educational guidance and biomarker-informed recommendations. This is NOT a substitute for medical care from a licensed physician. I will review any recommendations with my personal healthcare provider before implementation.</p>
+    <br>
+    <p>I understand my biomarker data and health information will be reviewed by Advisory Think Tank members solely for providing personalized recommendations. My information will be kept confidential.</p>
+    <br>
+    <p>I certify the information provided is accurate and complete to the best of my knowledge.</p>
+  </div>
+  <label class="check-item" style="font-size:0.88rem;font-weight:600;margin:16px 0;">
+    <input type="checkbox" id="consentCheck" required> I agree to the above terms *
+  </label>
+
+  <div class="nav-buttons" style="flex-direction:column;">
+    <button type="button" class="btn btn-back" onclick="prevSection()" style="align-self:flex-start;">← Back</button>
+    <button type="submit" class="btn btn-submit" id="submitBtn" disabled>Submit Intake Form</button>
+  </div>
+</div>
+</div>
+
+</form>
+
+<div class="success-screen" id="successScreen">
+  <div class="check-circle"><svg fill="none" stroke="#fff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div>
+  <h2>Intake Form Submitted</h2>
+  <p>Your comprehensive biomarker and health intake has been received. The Advisory Think Tank will review your submission and you'll receive your personalized recommendations within the timeframe specified by your consultation tier.</p>
+</div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Submitting your intake form...</p>
+</div>
+
+<script>
+// ===== EMAILJS CONFIG — REPLACE WITH YOUR IDS =====
+const EMAILJS_PUBLIC_KEY = 'xo3fQqSp5qYPIdcm0';
+const EMAILJS_SERVICE_ID = 'service_qixjfw5';
+const EMAILJS_TEMPLATE_ID = 'template_o9repzq';
+// ===================================================
+
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+const TOTAL_SECTIONS = 8;
+let currentSection = 0;
+
+// Build progress bar
+const progressBar = document.getElementById('progressBar');
+for (let i = 0; i < TOTAL_SECTIONS; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => { if (i <= currentSection) goToSection(i); };
+  progressBar.appendChild(dot);
+}
+
+function updateProgress() {
+  document.querySelectorAll('.progress-dot').forEach((d, i) => {
+    d.className = 'progress-dot' + (i === currentSection ? ' active' : i < currentSection ? ' complete' : '');
+  });
+}
+
+function goToSection(n) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-section="${n}"]`).classList.add('active');
+  currentSection = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextSection() { if (currentSection < TOTAL_SECTIONS - 1) goToSection(currentSection + 1); }
+function prevSection() { if (currentSection > 0) goToSection(currentSection - 1); }
+
+// Menopause symptoms table
+const menoSymptoms = [];
+const msBody = document.getElementById('menoSymptoms');
+menoSymptoms.forEach(s => {
+  const n = s.replace(/[^a-zA-Z]/g,'_').toLowerCase();
+  msBody.innerHTML += `<tr><td>${s}</td><td><select name="meno_${n}"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></td><td><input name="meno_${n}_notes" placeholder="Notes"></td></tr>`;
+});
+
+// Biomarker panels
+function buildBioPanel(id, markers) {
+  const el = document.getElementById(id);
+  markers.forEach(m => {
+    const n = m.replace(/[^a-zA-Z0-9]/g,'_').toLowerCase();
+    el.innerHTML += `<tr><td><strong>${m}</strong></td><td><input name="bio_${n}_val"></td><td><input name="bio_${n}_unit" style="width:80px"></td></tr>`;
+  });
+}
+
+buildBioPanel('metabolicPanel', ['Fasting Glucose','Fasting Insulin','HbA1c','HOMA-IR','Total Cholesterol','LDL','HDL','Triglycerides','Lp(a)','ApoB','hs-CRP','Homocysteine','Uric Acid','ALT','AST','GGT','Albumin','BUN','Creatinine','eGFR','Cystatin C']);
+buildBioPanel('hormonalPanel', ['Total Testosterone','Free Testosterone','Bioavailable Testosterone','SHBG','Estradiol E2 sensitive','DHT','LH','FSH','Prolactin','DHEA-S','Cortisol AM','Pregnenolone','PSA Total','PSA Free %','IGF-1','IGFBP-3']);
+buildBioPanel('thyroidPanel', ['TSH','Free T4','Free T3','Reverse T3','TPO Antibodies','Thyroglobulin Ab']);
+buildBioPanel('inflammPanel', ['hs-CRP','ESR','Ferritin','Iron','TIBC','Transferrin Sat %','Vitamin D 25-OH','Vitamin B12','Folate RBC','Magnesium RBC','Zinc','Selenium','Omega-3 Index']);
+buildBioPanel('longevityPanel', ['IGF-1','IGFBP-3','GH','NAD+','Telomere Length','Biological Age']);
+buildBioPanel('cbcPanel', ['WBC','RBC','Hemoglobin','Hematocrit','MCV','Platelets','RDW','Neutrophils %','Lymphocytes %']);
+// Note: Hematocrit especially important for men on TRT — polycythemia risk
+buildBioPanel('bonePanel', ['Calcium','Phosphorus','PTH','Osteocalcin','CTX','CAC Score','CIMT']);
+buildBioPanel('gutPanel', ['Stool Analysis','Zonulin','Calprotectin','Secretory IgA','SIBO Breath Test','H. pylori']);
+
+// Med and supp rows
+let medCount = 0, suppCount = 0;
+function addMedRow() {
+  medCount++;
+  document.getElementById('medRows').innerHTML += `<tr><td><input name="med_${medCount}_name"></td><td><input name="med_${medCount}_dose"></td><td><input name="med_${medCount}_freq"></td><td><input name="med_${medCount}_dur"></td></tr>`;
+}
+function addSuppRow() {
+  suppCount++;
+  document.getElementById('suppRows').innerHTML += `<tr><td><input name="supp_${suppCount}_name"></td><td><input name="supp_${suppCount}_dose"></td><td><input name="supp_${suppCount}_freq"></td><td><input name="supp_${suppCount}_reason"></td></tr>`;
+}
+for(let i=0;i<4;i++){addMedRow();addSuppRow();}
+
+// Consent checkbox
+document.getElementById('consentCheck').addEventListener('change', function() {
+  document.getElementById('submitBtn').disabled = !this.checked;
+});
+
+// Collect all form data
+function collectFormData() {
+  const form = document.getElementById('intakeForm');
+  const fd = new FormData(form);
+  const data = {};
+
+  // Text/select/textarea fields
+  for (const [key, val] of fd.entries()) {
+    if (data[key]) {
+      if (Array.isArray(data[key])) data[key].push(val);
+      else data[key] = [data[key], val];
+    } else {
+      data[key] = val;
+    }
+  }
+
+  // Checkboxes
+  form.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+    const k = cb.name;
+    if (!data[k]) data[k] = [];
+    if (!Array.isArray(data[k])) data[k] = [data[k]];
+    if (!data[k].includes(cb.value)) data[k].push(cb.value);
+  });
+
+  // Convert arrays to strings
+  for (const k in data) {
+    if (Array.isArray(data[k])) data[k] = data[k].join(', ');
+  }
+
+  return data;
+}
+
+// Submit
+document.getElementById('intakeForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('active');
+
+  try {
+    const data = collectFormData();
+
+    // Build a readable summary for email
+    let summary = '=== OSG WOMEN\'S INTAKE FORM ===\n\n';
+    for (const [k, v] of Object.entries(data)) {
+      if (v && v.trim && v.trim() !== '' && k !== 'consentCheck') {
+        const label = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        summary += `${label}: ${v}\n`;
+      }
+    }
+
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      form_type: "Men's Comprehensive Biomarker & Health Intake",
+      client_name: data.full_name || 'Not provided',
+      client_email: data.email || 'Not provided',
+      submission_date: new Date().toLocaleDateString(),
+      form_data: summary
+    });
+
+    overlay.classList.remove('active');
+    document.getElementById('intakeForm').style.display = 'none';
+    document.getElementById('progressBar').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    overlay.classList.remove('active');
+    alert('There was an error submitting your form. Please try again or contact us directly.\n\nError: ' + (err.text || err.message || err));
+  }
+});
+</script>
+</body>
+</html>
